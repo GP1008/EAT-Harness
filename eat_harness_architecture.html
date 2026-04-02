@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body { background: transparent; margin: 0; font-family: sans-serif; }
+svg text { font-family: sans-serif; }
+</style>
+</head>
+<body>
+<svg width="100%" viewBox="0 0 680 660" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+
+<!-- Title -->
+<text font-size="15" font-weight="600" x="340" y="24" text-anchor="middle" fill="#222">EAT Harness — Escrow &amp; Title Governed Architecture</text>
+
+<!-- LAYER 1: EXTERNAL PARTY BOUNDARY -->
+<rect x="30" y="38" width="620" height="80" rx="10" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text font-size="13" font-weight="500" x="340" y="60" text-anchor="middle" fill="#085041">Layer 1 — external party boundary</text>
+<text font-size="11" x="340" y="76" text-anchor="middle" fill="#0F6E56">Everything buyers, sellers, and lenders touch. Timestamped, acknowledged, immutable.</text>
+<rect x="48" y="86" width="138" height="22" rx="5" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+<text font-size="11" x="117" y="101" text-anchor="middle" fill="#04342C">Secure document portal</text>
+<rect x="198" y="86" width="138" height="22" rx="5" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+<text font-size="11" x="267" y="101" text-anchor="middle" fill="#04342C">Wire instruction delivery</text>
+<rect x="348" y="86" width="138" height="22" rx="5" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+<text font-size="11" x="417" y="101" text-anchor="middle" fill="#04342C">Missing items tracker</text>
+<rect x="498" y="86" width="144" height="22" rx="5" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+<text font-size="11" x="570" y="101" text-anchor="middle" fill="#04342C">Closing status feed</text>
+
+<line x1="340" y1="120" x2="340" y2="140" stroke="#888" stroke-width="1" marker-end="url(#arrow)"/>
+
+<!-- LAYER 2: CASE NOTEBOOK -->
+<rect x="30" y="142" width="620" height="134" rx="10" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+<text font-size="13" font-weight="500" x="340" y="164" text-anchor="middle" fill="#26215C">Layer 2 — case notebook (one governed workspace per transaction)</text>
+<text font-size="11" x="340" y="180" text-anchor="middle" fill="#534AB7">Every commitment, payoff, and condition in one bounded, queryable file.</text>
+
+<rect x="48" y="190" width="180" height="76" rx="8" fill="#CECBF6" stroke="#534AB7" stroke-width="0.5"/>
+<text font-size="12" font-weight="500" x="138" y="210" text-anchor="middle" fill="#26215C">Transaction state</text>
+<text font-size="11" x="138" y="226" text-anchor="middle" fill="#3C3489">Purchase / refi / cash sale</text>
+<text font-size="11" x="138" y="242" text-anchor="middle" fill="#3C3489">Commitment conditions</text>
+<text font-size="11" x="138" y="258" text-anchor="middle" fill="#3C3489">Closing milestone timeline</text>
+
+<rect x="246" y="190" width="180" height="76" rx="8" fill="#CECBF6" stroke="#534AB7" stroke-width="0.5"/>
+<text font-size="12" font-weight="500" x="336" y="210" text-anchor="middle" fill="#26215C">Document registry</text>
+<text font-size="11" x="336" y="226" text-anchor="middle" fill="#3C3489">Payoffs / HOA estoppels / ID</text>
+<text font-size="11" x="336" y="242" text-anchor="middle" fill="#3C3489">Expiry countdown clocks</text>
+<text font-size="11" x="336" y="258" text-anchor="middle" fill="#3C3489">Lender CD + PTF conditions</text>
+
+<rect x="444" y="190" width="188" height="76" rx="8" fill="#CECBF6" stroke="#534AB7" stroke-width="0.5"/>
+<text font-size="12" font-weight="500" x="538" y="210" text-anchor="middle" fill="#26215C">Interaction log</text>
+<text font-size="11" x="538" y="226" text-anchor="middle" fill="#3C3489">Wire instruction views</text>
+<text font-size="11" x="538" y="242" text-anchor="middle" fill="#3C3489">Party acknowledgments</text>
+<text font-size="11" x="538" y="258" text-anchor="middle" fill="#3C3489">Escrow officer notes</text>
+
+<line x1="340" y1="278" x2="340" y2="298" stroke="#888" stroke-width="1" marker-end="url(#arrow)"/>
+
+<!-- LAYER 3: GOVERNANCE -->
+<rect x="30" y="300" width="620" height="134" rx="10" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text font-size="13" font-weight="500" x="340" y="322" text-anchor="middle" fill="#042C53">Layer 3 — governance engine (TRAIGA &amp; AZ compliant by design)</text>
+<text font-size="11" x="340" y="338" text-anchor="middle" fill="#185FA5">Controls what AI can do with transaction data. Every action logged, traceable, auditable.</text>
+
+<rect x="48" y="348" width="175" height="76" rx="8" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"/>
+<text font-size="12" font-weight="500" x="135" y="368" text-anchor="middle" fill="#042C53">Admission control</text>
+<text font-size="11" x="135" y="384" text-anchor="middle" fill="#0C447C">Validates AI can access</text>
+<text font-size="11" x="135" y="400" text-anchor="middle" fill="#0C447C">this file, this party,</text>
+<text font-size="11" x="135" y="416" text-anchor="middle" fill="#0C447C">right now</text>
+
+<rect x="251" y="348" width="175" height="76" rx="8" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"/>
+<text font-size="12" font-weight="500" x="338" y="368" text-anchor="middle" fill="#042C53">Policy guidance layer</text>
+<text font-size="11" x="338" y="384" text-anchor="middle" fill="#0C447C">Pulls title commitment rules</text>
+<text font-size="11" x="338" y="400" text-anchor="middle" fill="#0C447C">silently into AI context</text>
+<text font-size="11" x="338" y="416" text-anchor="middle" fill="#0C447C">per transaction type</text>
+
+<rect x="454" y="348" width="178" height="76" rx="8" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"/>
+<text font-size="12" font-weight="500" x="543" y="368" text-anchor="middle" fill="#042C53">Immutable audit trail</text>
+<text font-size="11" x="543" y="384" text-anchor="middle" fill="#0C447C">Every doc touched,</text>
+<text font-size="11" x="543" y="400" text-anchor="middle" fill="#0C447C">every wire instruction sent,</text>
+<text font-size="11" x="543" y="416" text-anchor="middle" fill="#0C447C">cryptographically chained</text>
+
+<line x1="340" y1="436" x2="340" y2="454" stroke="#888" stroke-width="1" marker-end="url(#arrow)"/>
+
+<!-- LAYER 4: HITL -->
+<rect x="30" y="456" width="620" height="58" rx="10" fill="#FAEEDA" stroke="#BA7517" stroke-width="0.5"/>
+<text font-size="13" font-weight="500" x="340" y="478" text-anchor="middle" fill="#412402">Layer 4 — human-in-the-loop (licensed escrow officer always in the chain)</text>
+<text font-size="11" x="340" y="496" text-anchor="middle" fill="#854F0B">AI surfaces exceptions and summarizes. Human approves commitments and authorizes fund release. Always.</text>
+
+<line x1="340" y1="516" x2="340" y2="532" stroke="#888" stroke-width="1" marker-end="url(#arrow)"/>
+
+<!-- THE WINS -->
+<rect x="30" y="534" width="620" height="112" rx="10" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"/>
+<text font-size="13" font-weight="500" x="340" y="556" text-anchor="middle" fill="#4A1B0C">What EAT Harness eliminates — by design, not by policy</text>
+<text font-size="11" x="50" y="576" fill="#993C1D">→  "The payoff expired yesterday" — countdown clocks surface expiry 5 days early, automatically.</text>
+<text font-size="11" x="50" y="596" fill="#993C1D">→  "I never got the wire instructions" — delivery and view events are ledger-logged, timestamped.</text>
+<text font-size="11" x="50" y="616" fill="#993C1D">→  "Seller impersonation" — every ID upload tied to a governed, hash-chained audit chain.</text>
+<text font-size="11" x="50" y="636" fill="#993C1D">→  "We had no idea AI was being used" — AI registry shows what ran, when, and who reviewed it.</text>
+
+</svg>
+</body>
+</html>

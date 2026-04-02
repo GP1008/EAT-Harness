@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EAT Harness — Escrow &amp; Title Governed Architecture</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+  :root {
+    --bg: #0a0c0f; --surface: #111318; --surface2: #181c23;
+    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
+    --text: #e8eaf0; --muted: #6b7280; --accent: #00d4aa; --accent2: #3b82f6;
+    --warn: #f59e0b; --danger: #ef4444; --success: #10b981; --purple: #8b5cf6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; min-height: 100vh; overflow-x: hidden; }
+  /* HEADER */
+  header { display: flex; align-items: center; justify-content: space-between; padding: 16px 28px; border-bottom: 1px solid var(--border); background: rgba(10,12,15,0.95); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-mark { width: 32px; height: 32px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 13px; color: #0a0c0f; letter-spacing: -0.5px; }
+  .logo-text { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: -0.3px; }
+  .logo-sub { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 1px; }
+  .header-meta { display: flex; align-items: center; gap: 20px; }
+  .live-badge { display: flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent); background: rgba(0,212,170,0.08); border: 1px solid rgba(0,212,170,0.2); padding: 4px 10px; border-radius: 20px; }
+  .live-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+  .case-id { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
+  /* TABS */
+  .tab-bar { display: flex; gap: 0; border-bottom: 1px solid var(--border); background: var(--surface); padding: 0 28px; }
+  .tab-btn { font-family: 'DM Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; padding: 12px 20px; cursor: pointer; border: none; background: none; color: var(--muted); border-bottom: 2px solid transparent; transition: all 0.15s; }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  /* TAB PANELS */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  /* ARCHITECTURE VIEW */
+  .arch-view { padding: 32px 28px; display: flex; flex-direction: column; align-items: center; background: var(--bg); }
+  .arch-view svg { max-width: 860px; width: 100%; border-radius: 12px; background: #fff; padding: 16px; box-shadow: 0 0 0 1px var(--border), 0 8px 32px rgba(0,0,0,0.4); }
+  .arch-caption { margin-top: 16px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); text-align: center; }
+</style>
+</head>
+<body>
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-mark">EAT</div>
+    <div>
+      <div class="logo-text">EAT Harness</div>
+      <div class="logo-sub">Escrow &amp; Title Governed Architecture</div>
+    </div>
+  </div>
+  <div class="header-meta">
+    <div class="live-badge"><div class="live-dot"></div>Live Simulation</div>
+    <div class="case-id">CASE-2025-04071 · Navi Title Agency</div>
+  </div>
+</header>
+<!-- TABS -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('architecture')">Architecture</button>
+  <button class="tab-btn" onclick="switchTab('simulation')">Simulation</button>
+</div>
+<!-- ARCHITECTURE TAB -->
+<div class="tab-panel active" id="tab-architecture">
+  <div class="arch-view">
+    <svg viewBox="0 0 680 660" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <!-- Title -->
+      <text font-size="15" font-weight="600" x="340" y="24" text-anchor="middle" fill="#222" font-family="sans-serif">EAT Harness — Escrow &amp; Title Governed Architecture</text>
+      <!-- LAYER 1 -->
+      <rect x="30" y="38" width="620" height="80" rx="10" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+      <text font-size="13" font-weight="500" x="340" y="60" text-anchor="middle" fill="#085041" font-family="sans-serif">Layer 1 — external party boundary</text>
+      <text font-size="11" x="340" y="76" text-anchor="middle" fill="#0F6E56" font-family="sans-serif">Everything buyers, sellers, and lenders touch. Timestamped, acknowledged, immutable.</text>
+      <rect x="48" y="86" width="138" height="22" rx="5" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+      <text font-size="11" x="117" y="101" text-anchor="middle" fill="#04342C" font-family="sans-serif">Secure document portal</text>
+      <rect x="198" y="86" width="138" height="22" rx="5" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+      <text font-size="11" x="267" y="101" text-anchor="middle" fill="#04342C" font-family="sans-serif">Wire instruction delivery</text>
+      <rect x="348" y="86" width="138" height="22" rx="5" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+      <text font-size="11" x="417" y="101" text-anchor="middle" fill="#04342C" font-family="sans-serif">Missing items tracker</text>
+      <rect x="498" y="86" width="144" height="22" rx="5" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+      <text font-size="11" x="570" y="101" text-anchor="middle" fill="#04342C" font-family="sans-serif">Closing status feed</text>
+      <line x1="340" y1="120" x2="340" y2="140" stroke="#888" stroke-width="1" marker-end="url(#arrow)"/>
+      <!-- LAYER 2 -->
+      <rect x="30" y="142" width="620" height="134" rx="10" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+      <text font-size="13" font-weight="500" x="340" y="164" text-anchor="middle" fill="#26215C" font-family="sans-serif">Layer 2 — case notebook (one governed workspace per transaction)</text>
+      <text font-size="11" x="340" y="180" text-anchor="middle" fill="#534AB7" font-family="sans-serif">Every commitment, payoff, and condition in one bounded, queryable file.</text>
+      <rect x="48" y="190" width="180" height="76" rx="8" fill="#CECBF6" stroke="#534AB7" stroke-width="0.5"/>
+      <text font-size="12" font-weight="500" x="138" y="210" text-anchor="middle" fill="#26215C" font-family="sans-serif">Transaction state</text>
+      <text font-size="11" x="138" y="226" text-anchor="middle" fill="#3C3489" font-family="sans-serif">Purchase / refi / cash sale</text>
+      <text font-size="11" x="138" y="242" text-anchor="middle" fill="#3C3489" font-family="sans-serif">Commitment conditions</text>
+      <text font-size="11" x="138" y="258" text-anchor="middle" fill="#3C3489" font-family="sans-serif">Closing milestone timeline</text>
+      <rect x="246" y="190" width="180" height="76" rx="8" fill="#CECBF6" stroke="#534AB7" stroke-width="0.5"/>
+      <text font-size="12" font-weight="500" x="336" y="210" text-anchor="middle" fill="#26215C" font-family="sans-serif">Document registry</text>
+      <text font-size="11" x="336" y="226" text-anchor="middle" fill="#3C3489" font-family="sans-serif">Payoffs / HOA estoppels / ID</text>
+      <text font-size="11" x="336" y="242" text-anchor="middle" fill="#3C3489" font-family="sans-serif">Expiry countdown clocks</text>
+      <text font-size="11" x="336" y="258" text-anchor="middle" fill="#3C3489" font-family="sans-serif">Lender CD + PTF conditions</text>
+      <rect x="444" y="190" width="188" height="76" rx="8" fill="#CECBF6" stroke="#534AB7" stroke-width="0.5"/>
+      <text font-size="12" font-weight="500" x="538" y="210" text-anchor="middle" fill="#26215C" font-family="sans-serif">Interaction log</text>
+      <text font-size="11" x="538" y="226" text-anchor="middle" fill="#3C3489" font-family="sans-serif">Wire instruction views</text>
+      <text font-size="11" x="538" y="242" text-anchor="middle" fill="#3C3489" font-family="sans-serif">Party acknowledgments</text>
+      <text font-size="11" x="538" y="258" text-anchor="middle" fill="#3C3489" font-family="sans-serif">Escrow officer notes</text>
+      <line x1="340" y1="278" x2="340" y2="298" stroke="#888" stroke-width="1" marker-end="url(#arrow)"/>
+      <!-- LAYER 3 -->
+      <rect x="30" y="300" width="620" height="134" rx="10" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+      <text font-size="13" font-weight="500" x="340" y="322" text-anchor="middle" fill="#042C53" font-family="sans-serif">Layer 3 — governance engine (TRAIGA &amp; AZ compliant by design)</text>
+      <text font-size="11" x="340" y="338" text-anchor="middle" fill="#185FA5" font-family="sans-serif">Controls what AI can do with transaction data. Every action logged, traceable, auditable.</text>
+      <rect x="48" y="348" width="175" height="76" rx="8" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"/>
+      <text font-size="12" font-weight="500" x="135" y="368" text-anchor="middle" fill="#042C53" font-family="sans-serif">Admission control</text>
+      <text font-size="11" x="135" y="384" text-anchor="middle" fill="#0C447C" font-family="sans-serif">Validates AI can access</text>
+      <text font-size="11" x="135" y="400" text-anchor="middle" fill="#0C447C" font-family="sans-serif">this file, this party,</text>
+      <text font-size="11" x="135" y="416" text-anchor="middle" fill="#0C447C" font-family="sans-serif">right now</text>
+      <rect x="251" y="348" width="175" height="76" rx="8" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"/>
+      <text font-size="12" font-weight="500" x="338" y="368" text-anchor="middle" fill="#042C53" font-family="sans-serif">Policy guidance layer</text>
+      <text font-size="11" x="338" y="384" text-anchor="middle" fill="#0C447C" font-family="sans-serif">Pulls title commitment rules</text>
+      <text font-size="11" x="338" y="400" text-anchor="middle" fill="#0C447C" font-family="sans-serif">silently into AI context</text>
+      <text font-size="11" x="338" y="416" text-anchor="middle" fill="#0C447C" font-family="sans-serif">per transaction type</text>
+      <rect x="454" y="348" width="178" height="76" rx="8" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"/>
+      <text font-size="12" font-weight="500" x="543" y="368" text-anchor="middle" fill="#042C53" font-family="sans-serif">Immutable audit trail</text>
+      <text font-size="11" x="543" y="384" text-anchor="middle" fill="#0C447C" font-family="sans-serif">Every doc touched,</text>
+      <text font-size="11" x="543" y="400" text-anchor="middle" fill="#0C447C" font-family="sans-serif">every wire instruction sent,</text>
+      <text font-size="11" x="543" y="416" text-anchor="middle" fill="#0C447C" font-family="sans-serif">cryptographically chained</text>
+      <line x1="340" y1="436" x2="340" y2="454" stroke="#888" stroke-width="1" marker-end="url(#arrow)"/>
+      <!-- LAYER 4 -->
+      <rect x="30" y="456" width="620" height="58" rx="10" fill="#FAEEDA" stroke="#BA7517" stroke-width="0.5"/>
+      <text font-size="13" font-weight="500" x="340" y="478" text-anchor="middle" fill="#412402" font-family="sans-serif">Layer 4 — human-in-the-loop (licensed escrow officer always in the chain)</text>
+      <text font-size="11" x="340" y="496" text-anchor="middle" fill="#854F0B" font-family="sans-serif">AI surfaces exceptions and summarizes. Human approves commitments and authorizes fund release. Always.</text>
+      <line x1="340" y1="516" x2="340" y2="532" stroke="#888" stroke-width="1" marker-end="url(#arrow)"/>
+      <!-- WINS -->
+      <rect x="30" y="534" width="620" height="112" rx="10" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"/>
+      <text font-size="13" font-weight="500" x="340" y="556" text-anchor="middle" fill="#4A1B0C" font-family="sans-serif">What EAT Harness eliminates — by design, not by policy</text>
+      <text font-size="11" x="50" y="576" fill="#993C1D" font-family="sans-serif">→  "The payoff expired yesterday" — countdown clocks surface expiry 5 days early, automatically.</text>
+      <text font-size="11" x="50" y="596" fill="#993C1D" font-family="sans-serif">→  "I never got the wire instructions" — delivery and view events are ledger-logged, timestamped.</text>
+      <text font-size="11" x="50" y="616" fill="#993C1D" font-family="sans-serif">→  "Seller impersonation" — every ID upload tied to a governed, hash-chained audit chain.</text>
+      <text font-size="11" x="50" y="636" fill="#993C1D" font-family="sans-serif">→  "We had no idea AI was being used" — AI registry shows what ran, when, and who reviewed it.</text>
+    </svg>
+    <div class="arch-caption">EAT Harness — 4-layer governed architecture · TRAIGA &amp; AZ compliant by design</div>
+  </div>
+</div>
+<!-- SIMULATION TAB -->
+<div class="tab-panel" id="tab-simulation">
+<style>
+  /* CASE HEADER BANNER */
+  .case-banner { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; }
+  .case-info h2 { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+  .case-info p { color: var(--muted); font-size: 12px; margin-top: 3px; font-family: 'DM Mono', monospace; }
+  .case-stats { display: flex; gap: 32px; }
+  .stat { text-align: center; }
+  .stat-val { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; }
+  .stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px; font-family: 'DM Mono', monospace; }
+  /* HEALTH BAR */
+  .health-bar-wrap { padding: 12px 28px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 16px; }
+  .health-label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; white-space: nowrap; }
+  .health-track { flex: 1; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+  .health-fill { height: 100%; background: linear-gradient(90deg, var(--warn) 0%, var(--accent) 100%); border-radius: 2px; width: 71%; transition: width 1s ease; }
+  .health-score { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; color: var(--warn); }
+  .stage-pills { display: flex; gap: 4px; margin-left: 16px; }
+  .stage-pill { font-family: 'DM Mono', monospace; font-size: 9px; padding: 2px 8px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stage-pill.done { background: rgba(16,185,129,0.15); color: var(--success); }
+  .stage-pill.active { background: rgba(245,158,11,0.15); color: var(--warn); border: 1px solid rgba(245,158,11,0.3); }
+  .stage-pill.pending { background: rgba(255,255,255,0.04); color: var(--muted); }
+  /* DASHBOARD GRID */
+  .dashboard { display: grid; grid-template-columns: 1fr 340px; grid-template-rows: auto auto; gap: 1px; background: var(--border); min-height: calc(100vh - 220px); }
+  .panel { background: var(--bg); padding: 0; }
+  .panel-header { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .panel-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: -0.2px; display: flex; align-items: center; gap: 8px; }
+  .panel-badge { font-family: 'DM Mono', monospace; font-size: 10px; padding: 2px 7px; border-radius: 10px; background: rgba(255,255,255,0.06); color: var(--muted); }
+  /* DOC LIST */
+  .doc-list { padding: 0; }
+  .doc-row { display: grid; grid-template-columns: 24px 1fr 80px 100px 90px; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; }
+  .doc-row:hover { background: rgba(255,255,255,0.02); }
+  .doc-row.selected { background: rgba(0,212,170,0.04); border-left: 2px solid var(--accent); }
+  .doc-icon { width: 24px; height: 24px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; font-family: 'DM Mono', monospace; }
+  .doc-name { font-size: 13px; font-weight: 400; }
+  .doc-sub { font-size: 11px; color: var(--muted); margin-top: 2px; font-family: 'DM Mono', monospace; }
+  .doc-status { font-size: 10px; font-family: 'DM Mono', monospace; padding: 3px 8px; border-radius: 3px; text-align: center; font-weight: 500; }
+  .status-ok { background: rgba(16,185,129,0.12); color: var(--success); }
+  .status-warn { background: rgba(245,158,11,0.12); color: var(--warn); }
+  .status-danger { background: rgba(239,68,68,0.12); color: var(--danger); }
+  .status-missing { background: rgba(107,114,128,0.12); color: var(--muted); }
+  .status-pending { background: rgba(59,130,246,0.12); color: var(--accent2); }
+  .countdown { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; text-align: right; }
+  .countdown.critical { color: var(--danger); animation: flash 1.5s ease-in-out infinite; }
+  .countdown.warn { color: var(--warn); }
+  .countdown.ok { color: var(--success); }
+  .countdown.na { color: var(--muted); }
+  @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  /* AI PANEL */
+  .ai-panel { grid-column: 2; grid-row: 1 / 3; border-left: 1px solid var(--border); display: flex; flex-direction: column; }
+  .ai-summary-box { padding: 16px 20px; border-bottom: 1px solid var(--border); background: rgba(0,212,170,0.03); }
+  .ai-tag { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .ai-tag::before { content: ''; display: inline-block; width: 5px; height: 5px; background: var(--accent); border-radius: 50%; }
+  .ai-summary-text { font-size: 13px; line-height: 1.7; color: #c8cdd8; }
+  .ai-summary-text strong { color: var(--text); font-weight: 500; }
+  .gov-log { flex: 1; overflow-y: auto; }
+  .log-entry { padding: 10px 20px; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 40px 1fr; gap: 10px; align-items: start; animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+  .log-time { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); margin-top: 3px; text-align: right; }
+  .log-action { font-size: 12px; color: var(--text); line-height: 1.5; }
+  .log-actor { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 3px; }
+  /* DOC DETAIL */
+  .doc-detail { background: var(--surface); border-top: 1px solid var(--border); padding: 16px 20px; display: none; }
+  .doc-detail.visible { display: block; }
+  .detail-title { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .detail-item label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; font-family: 'DM Mono', monospace; display: block; margin-bottom: 3px; }
+  .detail-item span { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text); }
+  .hitl-action { margin-top: 14px; display: flex; gap: 8px; }
+  .btn { padding: 7px 16px; border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; }
+  .btn-approve { background: rgba(16,185,129,0.15); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
+  .btn-approve:hover { background: rgba(16,185,129,0.25); }
+  .btn-flag { background: rgba(239,68,68,0.1); color: var(--danger); border: 1px solid rgba(239,68,68,0.25); }
+  .btn-flag:hover { background: rgba(239,68,68,0.2); }
+  .btn-request { background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--border2); }
+  .btn-request:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+  /* STATS BAR */
+  .stats-bar { grid-column: 1; background: var(--surface); border-top: 1px solid var(--border); padding: 12px 20px; display: flex; gap: 28px; }
+  .mini-stat { display: flex; align-items: center; gap: 8px; }
+  .mini-stat-label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+  .mini-stat-val { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; }
+  /* COL HEADERS */
+  .doc-col-headers { display: grid; grid-template-columns: 24px 1fr 80px 100px 90px; gap: 12px; padding: 8px 20px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); }
+  .col-h { font-family: 'DM Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); }
+  /* ALERT */
+  .alert-banner { margin: 12px 20px; padding: 10px 14px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); border-radius: 6px; display: flex; align-items: flex-start; gap: 10px; }
+  .alert-icon { font-size: 14px; margin-top: 1px; flex-shrink: 0; }
+  .alert-text { font-size: 12px; line-height: 1.6; color: #fca5a5; }
+  .alert-text strong { color: var(--danger); }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+</style>
+
+<!-- CASE BANNER -->
+<div class="case-banner">
+  <div class="case-info">
+    <h2>4821 Desert Willow Dr — Purchase Transaction</h2>
+    <p>Scottsdale, AZ 85254 · Conventional · $685,000 · Est. Close: April 14, 2025</p>
+  </div>
+  <div class="case-stats">
+    <div class="stat"><div class="stat-val" style="color:var(--warn)">71%</div><div class="stat-label">File Health</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--danger)">2</div><div class="stat-label">Alerts</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--success)">9</div><div class="stat-label">Docs Received</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--muted)">3</div><div class="stat-label">Outstanding</div></div>
+  </div>
+</div>
+<!-- HEALTH BAR -->
+<div class="health-bar-wrap">
+  <span class="health-label">CLOSING PIPELINE</span>
+  <div class="health-track"><div class="health-fill"></div></div>
+  <span class="health-score">71%</span>
+  <div class="stage-pills">
+    <span class="stage-pill done">Title Search</span>
+    <span class="stage-pill done">Commitment</span>
+    <span class="stage-pill active">Conditions</span>
+    <span class="stage-pill pending">CD Review</span>
+    <span class="stage-pill pending">Funding</span>
+  </div>
+</div>
+<!-- DASHBOARD -->
+<div class="dashboard">
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">Document Registry <span class="panel-badge">12 items</span></div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">Click any row to review</div>
+    </div>
+    <div class="alert-banner">
+      <div class="alert-icon">⚠</div>
+      <div class="alert-text">
+        <strong>Payoff Statement (Wells Fargo)</strong> expires in 3 days — April 4. If not refreshed before closing, this transaction cannot fund. Reorder required immediately.<br>
+        <strong>HOA Estoppel (Desert Willow HOA)</strong> has not been received. Commitment Condition C-4 remains open. 9 days to closing.
+      </div>
+    </div>
+    <div class="doc-col-headers">
+      <div></div>
+      <div class="col-h">Document</div>
+      <div class="col-h">Status</div>
+      <div class="col-h">Received / Due</div>
+      <div class="col-h" style="text-align:right">Expires</div>
+    </div>
+    <div class="doc-list" id="docList"></div>
+    <div class="doc-detail" id="docDetail"></div>
+  </div>
+  <!-- RIGHT PANEL -->
+  <div class="ai-panel panel">
+    <div class="panel-header">
+      <div class="panel-title">AI Case Summary</div>
+      <span class="panel-badge">Updated 2m ago</span>
+    </div>
+    <div class="ai-summary-box">
+      <div class="ai-tag">Governance-Grounded Summary</div>
+      <div class="ai-summary-text">
+        Title is <strong>clear of encumbrances</strong> except a <strong>$312 HOA lien</strong> from Q1 2025 — included in the payoff schedule.<br><br>
+        <strong>Critical:</strong> The Wells Fargo payoff statement expires April 4. Closing is April 14 — this file cannot fund without a refreshed payoff. <strong>Human action required today.</strong><br><br>
+        Buyer ID verified. Lender CD not yet received. Two commitment conditions remain open: C-3 (survey) and C-4 (HOA estoppel). Survey is in transit.
+      </div>
+    </div>
+    <div class="panel-header" style="margin-top:0">
+      <div class="panel-title">Governance Log <span class="panel-badge">Immutable</span></div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--accent)">Hash-chained · auditable</div>
+    </div>
+    <div class="gov-log" id="govLog"></div>
+  </div>
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="mini-stat"><div class="mini-stat-label">Escrow Officer</div><div class="mini-stat-val" style="color:var(--text)">M. Ramirez</div></div>
+    <div class="mini-stat"><div class="mini-stat-label">AI Actions Today</div><div class="mini-stat-val" style="color:var(--accent)">14</div></div>
+    <div class="mini-stat"><div class="mini-stat-label">Human Reviews</div><div class="mini-stat-val" style="color:var(--success)">6</div></div>
+    <div class="mini-stat"><div class="mini-stat-label">Wire Instructions</div><div class="mini-stat-val" style="color:var(--success)">Delivered · Viewed</div></div>
+    <div class="mini-stat"><div class="mini-stat-label">Dual-Track Lock</div><div class="mini-stat-val" style="color:var(--accent)">Active</div></div>
+    <div class="mini-stat" style="margin-left:auto"><div class="mini-stat-label">Last Governance Check</div><div class="mini-stat-val" id="liveClock" style="color:var(--muted);font-size:10px">2025-04-01 · 16:42:07 UTC</div></div>
+  </div>
+</div>
+</div><!-- end tab-simulation -->
+<script>
+// ─── TAB SWITCHING ────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`[onclick="switchTab('${name}')"]`).classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+// ─── DATA ─────────────────────────────────────────────────────────────
+const docs = [
+  { id:'payoff-wf', icon:'PAY', iconBg:'rgba(239,68,68,0.15)', iconColor:'#ef4444', name:'Payoff Statement — Wells Fargo', sub:'Mortgage loan #****4821', status:'EXPIRING', statusClass:'status-danger', received:'Mar 22, 2025', expiresIn:3, detail:{ received:'2025-03-22 09:14 MST', period:'Good through: April 4, 2025', expiration:'April 4, 2025', submitter:'Wells Fargo Auto-Portal', hash:'a3f92b...d14e', action:'REORDER', note:'Payoff must be refreshed before April 10 to fund on April 14.' } },
+  { id:'hoa-estoppel', icon:'HOA', iconBg:'rgba(239,68,68,0.12)', iconColor:'#ef4444', name:'HOA Estoppel — Desert Willow HOA', sub:'Condition C-4 · Outstanding', status:'MISSING', statusClass:'status-danger', received:'—', expiresIn:null, detail:{ received:'Not received', period:'Required by: April 10, 2025', expiration:'90 days from issue', submitter:'Pending — HOA Management Co.', hash:'—', action:'REQUEST', note:'Ordered March 28. HOA turnaround typically 5–7 business days. Follow up today.' } },
+  { id:'buyer-id', icon:'ID', iconBg:'rgba(0,212,170,0.12)', iconColor:'#00d4aa', name:"Buyer ID — Driver's License", sub:'Identity verification · AZ DL', status:'VERIFIED', statusClass:'status-ok', received:'Mar 28, 2025', expiresIn:null, detail:{ received:'2025-03-28 14:33 MST', period:'DL Exp: 2029-08-15', expiration:'Life of transaction', submitter:'Buyer — Secure Portal Upload', hash:'f71ac3...8b2d', action:null, note:'ID verified against purchase contract. Biometric match logged.' } },
+  { id:'title-commitment', icon:'COM', iconBg:'rgba(59,130,246,0.12)', iconColor:'#3b82f6', name:'Title Commitment', sub:'File #TC-2025-04071 · 3 conditions open', status:'CONDITIONS', statusClass:'status-warn', received:'Mar 25, 2025', expiresIn:45, detail:{ received:'2025-03-25 11:00 MST', period:'C-3 (Survey), C-4 (HOA) open', expiration:'May 9, 2025', submitter:'Title Examiner — M. Ramirez', hash:'8d3f11...cc90', action:null, note:'Title is clear of encumbrances except Q1 HOA lien ($312) — included in payoff.' } },
+  { id:'purchase-contract', icon:'CON', iconBg:'rgba(139,92,246,0.12)', iconColor:'#8b5cf6', name:'Purchase Contract (BINSR)', sub:'Executed · All addenda included', status:'RECEIVED', statusClass:'status-ok', received:'Mar 18, 2025', expiresIn:null, detail:{ received:'2025-03-18 16:02 MST', period:'Close of Escrow: April 14, 2025', expiration:'N/A', submitter:"Buyer's Agent — DocuSign", hash:'2c88fa...501b', action:null, note:'Fully executed. All contingencies removed March 24.' } },
+  { id:'wire-instructions', icon:'WIR', iconBg:'rgba(0,212,170,0.12)', iconColor:'#00d4aa', name:'Wire Instructions — Buyer', sub:'Delivered via secure portal · Viewed', status:'DELIVERED', statusClass:'status-ok', received:'Mar 29, 2025', expiresIn:null, detail:{ received:'2025-03-29 10:15 MST', period:'Viewed: March 29 at 11:42 MST', expiration:'N/A', submitter:'Escrow Officer — M. Ramirez', hash:'9b40de...f338', action:null, note:'Buyer acknowledged receipt. Ledger-logged. Cannot be disputed.' } },
+  { id:'survey', icon:'SRV', iconBg:'rgba(245,158,11,0.12)', iconColor:'#f59e0b', name:'Survey — Lot 14B', sub:'Condition C-3 · In transit', status:'PENDING', statusClass:'status-pending', received:'—', expiresIn:null, detail:{ received:'Ordered March 26', period:'Expected: April 3, 2025', expiration:'90 days from issue', submitter:'AZ Land Survey Co.', hash:'—', action:'TRACK', note:'Surveyor confirmed April 3 delivery. On track for closing.' } },
+  { id:'lender-cd', icon:'CD', iconBg:'rgba(107,114,128,0.12)', iconColor:'#6b7280', name:'Closing Disclosure — Lender', sub:'Not yet received · Required 3 days pre-close', status:'MISSING', statusClass:'status-missing', received:'—', expiresIn:null, detail:{ received:'Not received', period:'Required by: April 11 (3-day rule)', expiration:'N/A', submitter:'Pending — First National Bank', hash:'—', action:'REQUEST', note:'TRID requires borrower receipt at least 3 business days before closing. Must arrive by April 11.' } },
+  { id:'home-insurance', icon:'INS', iconBg:'rgba(16,185,129,0.12)', iconColor:'#10b981', name:"Homeowner's Insurance Binder", sub:'State Farm · Policy confirmed', status:'RECEIVED', statusClass:'status-ok', received:'Mar 30, 2025', expiresIn:null, detail:{ received:'2025-03-30 08:55 MST', period:'Policy start: April 14, 2025', expiration:'Annual renewal', submitter:'State Farm — Agent Direct', hash:'c12b77...a49f', action:null, note:'Coverage confirmed. Premium paid. Lender named as mortgagee.' } }
+];
+
+const logEntries = [
+  { time:'16:42', action:'Payoff expiry alert triggered — 3 days to expiration', actor:'AI · Governance Engine', color:'var(--danger)' },
+  { time:'16:40', action:'HOA Estoppel follow-up reminder generated — 9 days to close', actor:'AI · Document Monitor', color:'var(--warn)' },
+  { time:'14:33', action:'Buyer ID verified and logged to audit chain', actor:'AI · Identity Layer', color:'var(--accent)' },
+  { time:'13:18', action:'Wire instructions delivered to buyer — secure portal', actor:'Escrow Officer · M. Ramirez', color:'var(--accent2)' },
+  { time:'13:20', action:'Wire instructions viewed by buyer — event ledger-logged', actor:'AI · Delivery Monitor', color:'var(--success)' },
+  { time:'11:05', action:'File health score updated: 71% (payoff alert active)', actor:'AI · Health Engine', color:'var(--warn)' },
+  { time:'10:44', action:'Title commitment reviewed — 3 conditions flagged open', actor:'Human Review · M. Ramirez', color:'var(--accent2)' },
+  { time:'09:30', action:'Survey status checked — delivery confirmed April 3', actor:'AI · Document Monitor', color:'var(--muted)' },
+  { time:'Yest.', action:'Purchase contract parsed — all contingency dates extracted', actor:'AI · OCR Engine', color:'var(--muted)' },
+  { time:'Yest.', action:'Case opened — closing timeline built from contract terms', actor:'AI · Case Engine', color:'var(--muted)' },
+];
+
+function renderDocs() {
+  const list = document.getElementById('docList');
+  list.innerHTML = docs.map((doc, i) => {
+    const expiry = doc.expiresIn !== null
+      ? `<span class="countdown ${doc.expiresIn <= 4 ? 'critical' : doc.expiresIn <= 10 ? 'warn' : 'ok'}">${doc.expiresIn}d left</span>`
+      : `<span class="countdown na">—</span>`;
+    return `<div class="doc-row" onclick="selectDoc(${i})" id="row-${i}">
+      <div class="doc-icon" style="background:${doc.iconBg};color:${doc.iconColor}">${doc.icon}</div>
+      <div><div class="doc-name">${doc.name}</div><div class="doc-sub">${doc.sub}</div></div>
+      <div class="doc-status ${doc.statusClass}">${doc.status}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">${doc.received}</div>
+      ${expiry}
+    </div>`;
+  }).join('');
+}
+
+let selectedDoc = null;
+function selectDoc(i) {
+  if (selectedDoc === i) {
+    selectedDoc = null;
+    document.querySelectorAll('.doc-row').forEach(r => r.classList.remove('selected'));
+    document.getElementById('docDetail').classList.remove('visible');
+    return;
+  }
+  selectedDoc = i;
+  document.querySelectorAll('.doc-row').forEach(r => r.classList.remove('selected'));
+  document.getElementById(`row-${i}`).classList.add('selected');
+  const doc = docs[i]; const d = doc.detail;
+  const actionBtn = d.action === 'REORDER'
+    ? `<button class="btn btn-flag" onclick="logAction('Payoff reorder initiated by escrow officer')">⚡ Reorder Payoff</button>`
+    : d.action === 'REQUEST'
+    ? `<button class="btn btn-request" onclick="logAction('Follow-up sent for ${doc.name}')">📤 Send Follow-up</button>`
+    : d.action === 'TRACK'
+    ? `<button class="btn btn-request" onclick="logAction('Survey status checked')">🔍 Check Status</button>`
+    : '';
+  document.getElementById('docDetail').innerHTML = `
+    <div class="detail-title">${doc.name}</div>
+    <div class="detail-grid">
+      <div class="detail-item"><label>Date Received</label><span>${d.received}</span></div>
+      <div class="detail-item"><label>Period / Validity</label><span>${d.period}</span></div>
+      <div class="detail-item"><label>Expiration</label><span>${d.expiration}</span></div>
+      <div class="detail-item"><label>Submitted By</label><span>${d.submitter}</span></div>
+      ${d.hash !== '—' ? `<div class="detail-item"><label>Audit Hash</label><span style="color:var(--accent);font-size:10px">${d.hash}</span></div>` : ''}
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--muted);line-height:1.6;font-family:'DM Sans',sans-serif">${d.note}</div>
+    <div class="hitl-action">
+      ${actionBtn}
+      ${d.hash !== '—' ? `<button class="btn btn-approve" onclick="logAction('Document manually verified by officer')">✓ Officer Verify</button>` : ''}
+    </div>`;
+  document.getElementById('docDetail').classList.add('visible');
+}
+
+function renderLog(entries) {
+  const log = document.getElementById('govLog');
+  log.innerHTML = entries.map(e => `
+    <div class="log-entry">
+      <div><div style="width:6px;height:6px;border-radius:50%;background:${e.color};margin:5px auto 3px"></div><div class="log-time">${e.time}</div></div>
+      <div><div class="log-action">${e.action}</div><div class="log-actor">${e.actor}</div></div>
+    </div>`).join('');
+}
+
+function logAction(msg) {
+  const now = new Date();
+  const time = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+  logEntries.unshift({ time, action: msg, actor: 'Human Action · Escrow Officer', color: 'var(--success)' });
+  renderLog(logEntries);
+}
+
+function updateClock() {
+  const el = document.getElementById('liveClock');
+  if (el) el.textContent = new Date().toISOString().replace('T',' ').substring(0,19) + ' UTC';
+}
+
+renderDocs();
+renderLog(logEntries);
+setInterval(updateClock, 1000);
+updateClock();
+
+setInterval(() => {
+  const auto = [
+    { action:'Document expiry check completed — 1 item flagged', actor:'AI · Governance Engine', color:'var(--accent)' },
+    { action:'File health score recalculated', actor:'AI · Health Engine', color:'var(--muted)' },
+    { action:'HOA contact portal pinged — awaiting response', actor:'AI · Document Monitor', color:'var(--warn)' },
+  ];
+  const pick = auto[Math.floor(Math.random() * auto.length)];
+  const now = new Date();
+  pick.time = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+  logEntries.unshift(pick);
+  if (logEntries.length > 20) logEntries.pop();
+  renderLog(logEntries);
+}, 45000);
+</script>
+</body>
+</html>
