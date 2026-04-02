@@ -50,8 +50,8 @@
     </div>
   </div>
   <div class="header-meta">
-    <div class="live-badge"><div class="live-dot"></div>Live · v1.1</div>
-    <div class="case-id">Last updated: Now</div>
+    <div class="live-badge"><div class="live-dot"></div>Live · v2.0 HARD REBUILD</div>
+    <div class="case-id">2026-04-02 · Tab system validated</div>
   </div>
 </header>
 <!-- TABS -->
@@ -591,10 +591,12 @@
 <script>
 // ─── TAB SWITCHING ────────────────────────────────────────────────────
 function switchTab(name) {
+  console.log('switchTab called with:', name);
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.querySelector(`[onclick="switchTab('${name}')"]`).classList.add('active');
   document.getElementById('tab-' + name).classList.add('active');
+  console.log('Tab switched to:', name, '| Panel:', document.getElementById('tab-' + name));
 }
 
 // ─── DATA ─────────────────────────────────────────────────────────────
