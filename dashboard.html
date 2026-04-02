@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EAT Harness — Escrow Health Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0a0c0f;
+    --surface: #111318;
+    --surface2: #181c23;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --accent: #00d4aa;
+    --accent2: #3b82f6;
+    --warn: #f59e0b;
+    --danger: #ef4444;
+    --success: #10b981;
+    --purple: #8b5cf6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,12,15,0.95);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-mark {
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    color: #0a0c0f;
+    letter-spacing: -0.5px;
+  }
+
+  .logo-text {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: -0.3px;
+  }
+
+  .logo-sub {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    margin-top: 1px;
+  }
+
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(0,212,170,0.08);
+    border: 1px solid rgba(0,212,170,0.2);
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .case-id {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* CASE HEADER BANNER */
+  .case-banner {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .case-info h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .case-info p {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 3px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .case-stats {
+    display: flex;
+    gap: 32px;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .stat-label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-top: 2px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* HEALTH BAR */
+  .health-bar-wrap {
+    padding: 12px 28px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .health-label {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    white-space: nowrap;
+  }
+
+  .health-track {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .health-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--warn) 0%, var(--accent) 100%);
+    border-radius: 2px;
+    width: 71%;
+    transition: width 1s ease;
+  }
+
+  .health-score {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--warn);
+  }
+
+  .stage-pills {
+    display: flex;
+    gap: 4px;
+    margin-left: 16px;
+  }
+
+  .stage-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .stage-pill.done { background: rgba(16,185,129,0.15); color: var(--success); }
+  .stage-pill.active { background: rgba(245,158,11,0.15); color: var(--warn); border: 1px solid rgba(245,158,11,0.3); }
+  .stage-pill.pending { background: rgba(255,255,255,0.04); color: var(--muted); }
+
+  /* MAIN GRID */
+  .dashboard {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    grid-template-rows: auto auto;
+    gap: 1px;
+    background: var(--border);
+    min-height: calc(100vh - 160px);
+  }
+
+  .panel {
+    background: var(--bg);
+    padding: 0;
+  }
+
+  .panel-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .panel-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .panel-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.06);
+    color: var(--muted);
+  }
+
+  /* DOCUMENT REGISTRY */
+  .doc-list { padding: 0; }
+
+  .doc-row {
+    display: grid;
+    grid-template-columns: 24px 1fr 80px 100px 90px;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .doc-row:hover { background: rgba(255,255,255,0.02); }
+
+  .doc-row.selected { background: rgba(0,212,170,0.04); border-left: 2px solid var(--accent); }
+
+  .doc-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .doc-name { font-size: 13px; font-weight: 400; }
+  .doc-sub { font-size: 11px; color: var(--muted); margin-top: 2px; font-family: 'DM Mono', monospace; }
+
+  .doc-status {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  .status-ok { background: rgba(16,185,129,0.12); color: var(--success); }
+  .status-warn { background: rgba(245,158,11,0.12); color: var(--warn); }
+  .status-danger { background: rgba(239,68,68,0.12); color: var(--danger); }
+  .status-missing { background: rgba(107,114,128,0.12); color: var(--muted); }
+  .status-pending { background: rgba(59,130,246,0.12); color: var(--accent2); }
+
+  .doc-expires {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    text-align: right;
+  }
+
+  .countdown {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: right;
+  }
+
+  .countdown.critical { color: var(--danger); animation: flash 1.5s ease-in-out infinite; }
+  .countdown.warn { color: var(--warn); }
+  .countdown.ok { color: var(--success); }
+  .countdown.na { color: var(--muted); }
+
+  @keyframes flash {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* AI SUMMARY PANEL */
+  .ai-panel {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ai-summary-box {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(0,212,170,0.03);
+  }
+
+  .ai-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .ai-tag::before {
+    content: '';
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  .ai-summary-text {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #c8cdd8;
+  }
+
+  .ai-summary-text strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* GOVERNANCE LOG */
+  .gov-log { flex: 1; overflow-y: auto; }
+
+  .log-entry {
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 10px;
+    align-items: start;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .log-time {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    margin-top: 3px;
+    text-align: right;
+  }
+
+  .log-content {}
+
+  .log-action {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .log-actor {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  .log-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-top: 5px;
+  }
+
+  /* DOC DETAIL DRAWER */
+  .doc-detail {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 16px 20px;
+    display: none;
+  }
+
+  .doc-detail.visible { display: block; }
+
+  .detail-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .detail-item label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-family: 'DM Mono', monospace;
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  .detail-item span {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+  }
+
+  .hitl-action {
+    margin-top: 14px;
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn {
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
+
+  .btn-approve {
+    background: rgba(16,185,129,0.15);
+    color: var(--success);
+    border: 1px solid rgba(16,185,129,0.3);
+  }
+
+  .btn-approve:hover { background: rgba(16,185,129,0.25); }
+
+  .btn-flag {
+    background: rgba(239,68,68,0.1);
+    color: var(--danger);
+    border: 1px solid rgba(239,68,68,0.25);
+  }
+
+  .btn-flag:hover { background: rgba(239,68,68,0.2); }
+
+  .btn-request {
+    background: rgba(255,255,255,0.05);
+    color: var(--muted);
+    border: 1px solid var(--border2);
+  }
+
+  .btn-request:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+
+  /* BOTTOM STATS BAR */
+  .stats-bar {
+    grid-column: 1;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 12px 20px;
+    display: flex;
+    gap: 28px;
+  }
+
+  .mini-stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mini-stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .mini-stat-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  /* COLUMN HEADERS */
+  .doc-col-headers {
+    display: grid;
+    grid-template-columns: 24px 1fr 80px 100px 90px;
+    gap: 12px;
+    padding: 8px 20px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+  }
+
+  .col-h {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+  }
+
+  /* ALERT BANNER */
+  .alert-banner {
+    margin: 12px 20px;
+    padding: 10px 14px;
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 6px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .alert-icon {
+    font-size: 14px;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+
+  .alert-text {
+    font-size: 12px;
+    line-height: 1.6;
+    color: #fca5a5;
+  }
+
+  .alert-text strong { color: var(--danger); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-mark">EAT</div>
+    <div>
+      <div class="logo-text">EAT Harness</div>
+      <div class="logo-sub">Escrow &amp; Title Governed Architecture</div>
+    </div>
+  </div>
+  <div class="header-meta">
+    <div class="live-badge"><div class="live-dot"></div>Live Simulation</div>
+    <div class="case-id">CASE-2025-04071 · Navi Title Agency</div>
+  </div>
+</header>
+
+<!-- CASE BANNER -->
+<div class="case-banner">
+  <div class="case-info">
+    <h2>4821 Desert Willow Dr — Purchase Transaction</h2>
+    <p>Scottsdale, AZ 85254 · Conventional · $685,000 · Est. Close: April 14, 2025</p>
+  </div>
+  <div class="case-stats">
+    <div class="stat">
+      <div class="stat-val" style="color:var(--warn)">71%</div>
+      <div class="stat-label">File Health</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" style="color:var(--danger)">2</div>
+      <div class="stat-label">Alerts</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" style="color:var(--success)">9</div>
+      <div class="stat-label">Docs Received</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" style="color:var(--muted)">3</div>
+      <div class="stat-label">Outstanding</div>
+    </div>
+  </div>
+</div>
+
+<!-- HEALTH BAR -->
+<div class="health-bar-wrap">
+  <span class="health-label">CLOSING PIPELINE</span>
+  <div class="health-track"><div class="health-fill"></div></div>
+  <span class="health-score">71%</span>
+  <div class="stage-pills">
+    <span class="stage-pill done">Title Search</span>
+    <span class="stage-pill done">Commitment</span>
+    <span class="stage-pill active">Conditions</span>
+    <span class="stage-pill pending">CD Review</span>
+    <span class="stage-pill pending">Funding</span>
+  </div>
+</div>
+
+<!-- MAIN DASHBOARD -->
+<div class="dashboard">
+
+  <!-- DOCUMENT REGISTRY PANEL -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        Document Registry
+        <span class="panel-badge">12 items</span>
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">Click any row to review</div>
+    </div>
+
+    <!-- ALERT -->
+    <div class="alert-banner">
+      <div class="alert-icon">⚠</div>
+      <div class="alert-text">
+        <strong>Payoff Statement (Wells Fargo)</strong> expires in 3 days — April 4. If not refreshed before closing, this transaction cannot fund. Reorder required immediately.<br>
+        <strong>HOA Estoppel (Desert Willow HOA)</strong> has not been received. Commitment Condition C-4 remains open. 9 days to closing.
+      </div>
+    </div>
+
+    <div class="doc-col-headers">
+      <div></div>
+      <div class="col-h">Document</div>
+      <div class="col-h">Status</div>
+      <div class="col-h">Received / Due</div>
+      <div class="col-h" style="text-align:right">Expires</div>
+    </div>
+
+    <div class="doc-list" id="docList"></div>
+
+    <div class="doc-detail" id="docDetail"></div>
+
+  </div>
+
+  <!-- RIGHT PANEL: AI SUMMARY + GOV LOG -->
+  <div class="ai-panel panel">
+    <div class="panel-header">
+      <div class="panel-title">AI Case Summary</div>
+      <span class="panel-badge">Updated 2m ago</span>
+    </div>
+
+    <div class="ai-summary-box">
+      <div class="ai-tag">Governance-Grounded Summary</div>
+      <div class="ai-summary-text">
+        Title is <strong>clear of encumbrances</strong> except a <strong>$312 HOA lien</strong> from Q1 2025 — included in the payoff schedule.<br><br>
+        <strong>Critical:</strong> The Wells Fargo payoff statement expires April 4. Closing is April 14 — this file cannot fund without a refreshed payoff. <strong>Human action required today.</strong><br><br>
+        Buyer ID verified. Lender CD not yet received. Two commitment conditions remain open: C-3 (survey) and C-4 (HOA estoppel). Survey is in transit.
+      </div>
+    </div>
+
+    <div class="panel-header" style="margin-top:0">
+      <div class="panel-title">
+        Governance Log
+        <span class="panel-badge">Immutable</span>
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--accent)">Hash-chained ·  auditable</div>
+    </div>
+
+    <div class="gov-log" id="govLog"></div>
+  </div>
+
+  <!-- BOTTOM STATS BAR -->
+  <div class="stats-bar">
+    <div class="mini-stat">
+      <div class="mini-stat-label">Escrow Officer</div>
+      <div class="mini-stat-val" style="color:var(--text)">M. Ramirez</div>
+    </div>
+    <div class="mini-stat">
+      <div class="mini-stat-label">AI Actions Today</div>
+      <div class="mini-stat-val" style="color:var(--accent)">14</div>
+    </div>
+    <div class="mini-stat">
+      <div class="mini-stat-label">Human Reviews</div>
+      <div class="mini-stat-val" style="color:var(--success)">6</div>
+    </div>
+    <div class="mini-stat">
+      <div class="mini-stat-label">Wire Instructions</div>
+      <div class="mini-stat-val" style="color:var(--success)">Delivered · Viewed</div>
+    </div>
+    <div class="mini-stat">
+      <div class="mini-stat-label">Dual-Track Lock</div>
+      <div class="mini-stat-val" style="color:var(--accent)">Active</div>
+    </div>
+    <div class="mini-stat" style="margin-left:auto">
+      <div class="mini-stat-label">Last Governance Check</div>
+      <div class="mini-stat-val" style="color:var(--muted);font-size:10px">2025-04-01 · 16:42:07 UTC</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── DATA ─────────────────────────────────────────────────────────────
+const docs = [
+  {
+    id: 'payoff-wf',
+    icon: 'PAY', iconBg: 'rgba(239,68,68,0.15)', iconColor: '#ef4444',
+    name: 'Payoff Statement — Wells Fargo',
+    sub: 'Mortgage loan #****4821',
+    status: 'EXPIRING', statusClass: 'status-danger',
+    received: 'Mar 22, 2025', expiresIn: 3, expiresUnit: 'days',
+    detail: {
+      received: '2025-03-22 09:14 MST',
+      period: 'Good through: April 4, 2025',
+      expiration: 'April 4, 2025',
+      submitter: 'Wells Fargo Auto-Portal',
+      hash: 'a3f92b...d14e',
+      action: 'REORDER',
+      note: 'Payoff must be refreshed before April 10 to fund on April 14.'
+    }
+  },
+  {
+    id: 'hoa-estoppel',
+    icon: 'HOA', iconBg: 'rgba(239,68,68,0.12)', iconColor: '#ef4444',
+    name: 'HOA Estoppel — Desert Willow HOA',
+    sub: 'Condition C-4 · Outstanding',
+    status: 'MISSING', statusClass: 'status-danger',
+    received: '—', expiresIn: null, expiresUnit: '',
+    detail: {
+      received: 'Not received',
+      period: 'Required by: April 10, 2025',
+      expiration: '90 days from issue',
+      submitter: 'Pending — HOA Management Co.',
+      hash: '—',
+      action: 'REQUEST',
+      note: 'Ordered March 28. HOA turnaround typically 5–7 business days. Follow up today.'
+    }
+  },
+  {
+    id: 'buyer-id',
+    icon: 'ID', iconBg: 'rgba(0,212,170,0.12)', iconColor: '#00d4aa',
+    name: 'Buyer ID — Driver\'s License',
+    sub: 'Identity verification · AZ DL',
+    status: 'VERIFIED', statusClass: 'status-ok',
+    received: 'Mar 28, 2025', expiresIn: null, expiresUnit: '',
+    detail: {
+      received: '2025-03-28 14:33 MST',
+      period: 'DL Exp: 2029-08-15',
+      expiration: 'Life of transaction',
+      submitter: 'Buyer — Secure Portal Upload',
+      hash: 'f71ac3...8b2d',
+      action: null,
+      note: 'ID verified against purchase contract. Biometric match logged.'
+    }
+  },
+  {
+    id: 'title-commitment',
+    icon: 'COM', iconBg: 'rgba(59,130,246,0.12)', iconColor: '#3b82f6',
+    name: 'Title Commitment',
+    sub: 'File #TC-2025-04071 · 3 conditions open',
+    status: 'CONDITIONS', statusClass: 'status-warn',
+    received: 'Mar 25, 2025', expiresIn: 45, expiresUnit: 'days',
+    detail: {
+      received: '2025-03-25 11:00 MST',
+      period: 'C-3 (Survey), C-4 (HOA) open',
+      expiration: 'May 9, 2025',
+      submitter: 'Title Examiner — M. Ramirez',
+      hash: '8d3f11...cc90',
+      action: null,
+      note: 'Title is clear of encumbrances except Q1 HOA lien ($312) — included in payoff.'
+    }
+  },
+  {
+    id: 'purchase-contract',
+    icon: 'CON', iconBg: 'rgba(139,92,246,0.12)', iconColor: '#8b5cf6',
+    name: 'Purchase Contract (BINSR)',
+    sub: 'Executed · All addenda included',
+    status: 'RECEIVED', statusClass: 'status-ok',
+    received: 'Mar 18, 2025', expiresIn: null, expiresUnit: '',
+    detail: {
+      received: '2025-03-18 16:02 MST',
+      period: 'Close of Escrow: April 14, 2025',
+      expiration: 'N/A',
+      submitter: 'Buyer\'s Agent — DocuSign',
+      hash: '2c88fa...501b',
+      action: null,
+      note: 'Fully executed. All contingencies removed March 24.'
+    }
+  },
+  {
+    id: 'wire-instructions',
+    icon: 'WIR', iconBg: 'rgba(0,212,170,0.12)', iconColor: '#00d4aa',
+    name: 'Wire Instructions — Buyer',
+    sub: 'Delivered via secure portal · Viewed',
+    status: 'DELIVERED', statusClass: 'status-ok',
+    received: 'Mar 29, 2025', expiresIn: null, expiresUnit: '',
+    detail: {
+      received: '2025-03-29 10:15 MST',
+      period: 'Viewed: March 29 at 11:42 MST',
+      expiration: 'N/A',
+      submitter: 'Escrow Officer — M. Ramirez',
+      hash: '9b40de...f338',
+      action: null,
+      note: 'Buyer acknowledged receipt. Ledger-logged. Cannot be disputed.'
+    }
+  },
+  {
+    id: 'survey',
+    icon: 'SRV', iconBg: 'rgba(245,158,11,0.12)', iconColor: '#f59e0b',
+    name: 'Survey — Lot 14B',
+    sub: 'Condition C-3 · In transit',
+    status: 'PENDING', statusClass: 'status-pending',
+    received: '—', expiresIn: null, expiresUnit: '',
+    detail: {
+      received: 'Ordered March 26',
+      period: 'Expected: April 3, 2025',
+      expiration: '90 days from issue',
+      submitter: 'AZ Land Survey Co.',
+      hash: '—',
+      action: 'TRACK',
+      note: 'Surveyor confirmed April 3 delivery. On track for closing.'
+    }
+  },
+  {
+    id: 'lender-cd',
+    icon: 'CD', iconBg: 'rgba(107,114,128,0.12)', iconColor: '#6b7280',
+    name: 'Closing Disclosure — Lender',
+    sub: 'Not yet received · Required 3 days pre-close',
+    status: 'MISSING', statusClass: 'status-missing',
+    received: '—', expiresIn: null, expiresUnit: '',
+    detail: {
+      received: 'Not received',
+      period: 'Required by: April 11 (3-day rule)',
+      expiration: 'N/A',
+      submitter: 'Pending — First National Bank',
+      hash: '—',
+      action: 'REQUEST',
+      note: 'TRID requires borrower receipt at least 3 business days before closing. Must arrive by April 11.'
+    }
+  },
+  {
+    id: 'home-insurance',
+    icon: 'INS', iconBg: 'rgba(16,185,129,0.12)', iconColor: '#10b981',
+    name: 'Homeowner\'s Insurance Binder',
+    sub: 'State Farm · Policy confirmed',
+    status: 'RECEIVED', statusClass: 'status-ok',
+    received: 'Mar 30, 2025', expiresIn: null, expiresUnit: '',
+    detail: {
+      received: '2025-03-30 08:55 MST',
+      period: 'Policy start: April 14, 2025',
+      expiration: 'Annual renewal',
+      submitter: 'State Farm — Agent Direct',
+      hash: 'c12b77...a49f',
+      action: null,
+      note: 'Coverage confirmed. Premium paid. Lender named as mortgagee.'
+    }
+  }
+];
+
+const logEntries = [
+  { time: '16:42', action: 'Payoff expiry alert triggered — 3 days to expiration', actor: 'AI · Governance Engine', color: 'var(--danger)' },
+  { time: '16:40', action: 'HOA Estoppel follow-up reminder generated — 9 days to close', actor: 'AI · Document Monitor', color: 'var(--warn)' },
+  { time: '14:33', action: 'Buyer ID verified and logged to audit chain', actor: 'AI · Identity Layer', color: 'var(--accent)' },
+  { time: '13:18', action: 'Wire instructions delivered to buyer — secure portal', actor: 'Escrow Officer · M. Ramirez', color: 'var(--accent2)' },
+  { time: '13:20', action: 'Wire instructions viewed by buyer — event ledger-logged', actor: 'AI · Delivery Monitor', color: 'var(--success)' },
+  { time: '11:05', action: 'File health score updated: 71% (payoff alert active)', actor: 'AI · Health Engine', color: 'var(--warn)' },
+  { time: '10:44', action: 'Title commitment reviewed — 3 conditions flagged open', actor: 'Human Review · M. Ramirez', color: 'var(--accent2)' },
+  { time: '09:30', action: 'Survey status checked — delivery confirmed April 3', actor: 'AI · Document Monitor', color: 'var(--muted)' },
+  { time: 'Yest.', action: 'Purchase contract parsed — all contingency dates extracted', actor: 'AI · OCR Engine', color: 'var(--muted)' },
+  { time: 'Yest.', action: 'Case opened — closing timeline built from contract terms', actor: 'AI · Case Engine', color: 'var(--muted)' },
+];
+
+// ─── RENDER DOCS ──────────────────────────────────────────────────────
+function renderDocs() {
+  const list = document.getElementById('docList');
+  list.innerHTML = docs.map((doc, i) => {
+    const expiry = doc.expiresIn !== null
+      ? `<span class="countdown ${doc.expiresIn <= 4 ? 'critical' : doc.expiresIn <= 10 ? 'warn' : 'ok'}">${doc.expiresIn}d left</span>`
+      : `<span class="countdown na">—</span>`;
+    return `
+      <div class="doc-row" onclick="selectDoc(${i})" id="row-${i}">
+        <div class="doc-icon" style="background:${doc.iconBg};color:${doc.iconColor}">${doc.icon}</div>
+        <div>
+          <div class="doc-name">${doc.name}</div>
+          <div class="doc-sub">${doc.sub}</div>
+        </div>
+        <div class="doc-status ${doc.statusClass}">${doc.status}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">${doc.received}</div>
+        ${expiry}
+      </div>
+    `;
+  }).join('');
+}
+
+// ─── SELECT DOC ───────────────────────────────────────────────────────
+let selectedDoc = null;
+function selectDoc(i) {
+  if (selectedDoc === i) {
+    selectedDoc = null;
+    document.querySelectorAll('.doc-row').forEach(r => r.classList.remove('selected'));
+    document.getElementById('docDetail').classList.remove('visible');
+    return;
+  }
+  selectedDoc = i;
+  document.querySelectorAll('.doc-row').forEach(r => r.classList.remove('selected'));
+  document.getElementById(`row-${i}`).classList.add('selected');
+
+  const doc = docs[i];
+  const d = doc.detail;
+  const actionBtn = d.action === 'REORDER'
+    ? `<button class="btn btn-flag" onclick="logAction('Payoff reorder initiated by escrow officer')">⚡ Reorder Payoff</button>`
+    : d.action === 'REQUEST'
+    ? `<button class="btn btn-request" onclick="logAction('Follow-up sent for ${doc.name}')">📤 Send Follow-up</button>`
+    : d.action === 'TRACK'
+    ? `<button class="btn btn-request" onclick="logAction('Survey status checked')">🔍 Check Status</button>`
+    : '';
+
+  document.getElementById('docDetail').innerHTML = `
+    <div class="detail-title">${doc.name}</div>
+    <div class="detail-grid">
+      <div class="detail-item"><label>Date Received</label><span>${d.received}</span></div>
+      <div class="detail-item"><label>Period / Validity</label><span>${d.period}</span></div>
+      <div class="detail-item"><label>Expiration</label><span>${d.expiration}</span></div>
+      <div class="detail-item"><label>Submitted By</label><span>${d.submitter}</span></div>
+      ${d.hash !== '—' ? `<div class="detail-item"><label>Audit Hash</label><span style="color:var(--accent);font-size:10px">${d.hash}</span></div>` : ''}
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--muted);line-height:1.6;font-family:'DM Sans',sans-serif">${d.note}</div>
+    <div class="hitl-action">
+      ${actionBtn}
+      ${d.hash !== '—' ? `<button class="btn btn-approve" onclick="logAction('Document manually verified by officer')">✓ Officer Verify</button>` : ''}
+    </div>
+  `;
+  document.getElementById('docDetail').classList.add('visible');
+}
+
+// ─── RENDER GOV LOG ───────────────────────────────────────────────────
+function renderLog(entries) {
+  const log = document.getElementById('govLog');
+  log.innerHTML = entries.map(e => `
+    <div class="log-entry">
+      <div>
+        <div style="width:6px;height:6px;border-radius:50%;background:${e.color};margin:5px auto 3px"></div>
+        <div class="log-time">${e.time}</div>
+      </div>
+      <div>
+        <div class="log-action">${e.action}</div>
+        <div class="log-actor">${e.actor}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ─── LOG ACTION ───────────────────────────────────────────────────────
+function logAction(msg) {
+  const now = new Date();
+  const time = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+  logEntries.unshift({ time, action: msg, actor: 'Human Action · Escrow Officer', color: 'var(--success)' });
+  renderLog(logEntries);
+}
+
+// ─── LIVE CLOCK ───────────────────────────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  const ts = now.toISOString().replace('T',' ').substring(0,19) + ' UTC';
+  const el = document.querySelector('.mini-stat-val[style*="muted"]');
+  if (el) el.textContent = ts;
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────
+renderDocs();
+renderLog(logEntries);
+setInterval(updateClock, 1000);
+updateClock();
+
+// Simulate a new log entry every 45s to show "live" feel
+setInterval(() => {
+  const auto = [
+    { action: 'Document expiry check completed — 1 item flagged', actor: 'AI · Governance Engine', color: 'var(--accent)' },
+    { action: 'File health score recalculated', actor: 'AI · Health Engine', color: 'var(--muted)' },
+    { action: 'HOA contact portal pinged — awaiting response', actor: 'AI · Document Monitor', color: 'var(--warn)' },
+  ];
+  const pick = auto[Math.floor(Math.random() * auto.length)];
+  const now = new Date();
+  pick.time = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+  logEntries.unshift(pick);
+  if (logEntries.length > 20) logEntries.pop();
+  renderLog(logEntries);
+}, 45000);
+</script>
+</body>
+</html>
