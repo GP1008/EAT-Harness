@@ -50,17 +50,291 @@
     </div>
   </div>
   <div class="header-meta">
-    <div class="live-badge"><div class="live-dot"></div>Live Simulation</div>
-    <div class="case-id">CASE-2025-04071 · Navi Title Agency</div>
+    <div class="live-badge"><div class="live-dot"></div>Live</div>
+    <div class="case-id">v1.0 · April 2025</div>
   </div>
 </header>
 <!-- TABS -->
 <div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('architecture')">Architecture</button>
+  <button class="tab-btn active" onclick="switchTab('plan')">90-Day Plan</button>
+  <button class="tab-btn" onclick="switchTab('architecture')">Architecture</button>
   <button class="tab-btn" onclick="switchTab('simulation')">Simulation</button>
 </div>
+
+<!-- ===== 90-DAY PLAN TAB ===== -->
+<div class="tab-panel active" id="tab-plan">
+<style>
+  .hero { padding: 56px 60px 40px; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(0,212,170,0.04) 0%, transparent 100%); position: relative; overflow: hidden; }
+  .hero::before { content: '90'; position: absolute; right: 40px; top: 10px; font-family: 'Syne', sans-serif; font-size: 200px; font-weight: 800; color: rgba(0,212,170,0.04); line-height: 1; pointer-events: none; letter-spacing: -8px; }
+  .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .hero-eyebrow::before { content: ''; display: inline-block; width: 24px; height: 1px; background: var(--accent); }
+  .hero h1 { font-family: 'Syne', sans-serif; font-size: 42px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.1; max-width: 600px; }
+  .hero h1 span { color: var(--accent); }
+  .hero-sub { margin-top: 16px; font-size: 15px; color: #9ca3af; max-width: 540px; line-height: 1.7; }
+  .hero-meta { margin-top: 28px; display: flex; gap: 32px; }
+  .hero-stat { display: flex; flex-direction: column; gap: 3px; }
+  .hero-stat-val { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 700; letter-spacing: -1px; }
+  .hero-stat-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+  .timeline { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--border); border-bottom: 1px solid var(--border); }
+  .phase { background: var(--bg); padding: 28px 28px 0; position: relative; }
+  .phase-header { padding-bottom: 20px; border-bottom: 1px solid var(--border); margin-bottom: 0; }
+  .phase-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .phase-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; letter-spacing: -0.4px; margin-bottom: 4px; }
+  .phase-days { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+  .phase-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .phase-body { padding: 20px 0 28px; }
+  .initiative { padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .initiative:last-child { border-bottom: none; }
+  .init-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .init-title { font-size: 13px; font-weight: 500; line-height: 1.4; }
+  .init-tag { font-family: 'DM Mono', monospace; font-size: 9px; padding: 2px 7px; border-radius: 3px; white-space: nowrap; flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.5px; }
+  .tag-gov { background: rgba(0,212,170,0.1); color: var(--accent); }
+  .tag-ops { background: rgba(59,130,246,0.1); color: var(--accent2); }
+  .tag-reg { background: rgba(139,92,246,0.1); color: var(--purple); }
+  .tag-measure { background: rgba(245,158,11,0.1); color: var(--warn); }
+  .tag-hitl { background: rgba(16,185,129,0.1); color: var(--success); }
+  .init-detail { font-size: 11px; color: var(--muted); line-height: 1.6; }
+  .pillars { padding: 48px 60px; border-bottom: 1px solid var(--border); }
+  .section-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 28px; display: flex; align-items: center; gap: 12px; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .pillars-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .pillar-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 24px; transition: border-color 0.2s; }
+  .pillar-card:hover { border-color: var(--border2); }
+  .pillar-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; margin-bottom: 14px; }
+  .pillar-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 8px; }
+  .pillar-body { font-size: 12px; color: #9ca3af; line-height: 1.7; }
+  .pillar-points { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+  .pillar-point { display: flex; align-items: flex-start; gap: 8px; font-size: 11px; color: var(--muted); }
+  .pillar-point::before { content: '→'; color: var(--accent); flex-shrink: 0; margin-top: 1px; }
+  .questions-section { padding: 48px 60px; border-bottom: 1px solid var(--border); background: var(--surface); }
+  .questions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 28px; }
+  .question-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; transition: all 0.15s; }
+  .question-card:hover { border-color: rgba(0,212,170,0.2); background: rgba(0,212,170,0.02); }
+  .q-label { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+  .q-text { font-size: 13px; line-height: 1.6; color: var(--text); }
+  .q-intent { font-size: 11px; color: var(--muted); margin-top: 6px; line-height: 1.5; font-style: italic; }
+  .compliance-rail { padding: 36px 60px; border-bottom: 1px solid var(--border); }
+  .rail-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 24px; }
+  .rail-item { background: var(--surface); padding: 20px; }
+  .rail-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .rail-body { font-size: 11px; color: var(--muted); line-height: 1.6; }
+  .rail-cite { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--purple); margin-top: 8px; display: block; }
+  .footnote { padding: 24px 60px; display: flex; align-items: center; justify-content: space-between; }
+  .fn-text { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+  .fn-badge { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--accent); background: rgba(0,212,170,0.08); border: 1px solid rgba(0,212,170,0.18); padding: 4px 12px; border-radius: 20px; }
+</style>
+
+<div class="hero">
+  <div class="hero-eyebrow">Implementation Roadmap</div>
+  <h1>From <span>operational waste</span> to governed intelligence.</h1>
+  <p class="hero-sub">A phased, compliance-first approach to AI adoption for title &amp; escrow — designed for a 130-person agency that needs practical wins, not enterprise-level overkill.</p>
+  <div class="hero-meta">
+    <div class="hero-stat"><div class="hero-stat-val" style="color:var(--accent)">90</div><div class="hero-stat-label">Days to foundation</div></div>
+    <div class="hero-stat"><div class="hero-stat-val" style="color:var(--accent2)">3</div><div class="hero-stat-label">Phases</div></div>
+    <div class="hero-stat"><div class="hero-stat-val" style="color:var(--warn)">0</div><div class="hero-stat-label">Disruption to ops</div></div>
+    <div class="hero-stat"><div class="hero-stat-val" style="color:var(--success)">HITL</div><div class="hero-stat-label">Every decision</div></div>
+  </div>
+</div>
+
+<div class="timeline">
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num">Phase 01</div>
+      <div class="phase-days" style="background:rgba(0,212,170,0.1);color:var(--accent)">Days 1 – 30</div>
+      <div class="phase-title">Map the operational waste</div>
+      <div class="phase-desc">Sit with ops and escrow teams. Find exactly where time is lost to manual data entry before building anything.</div>
+    </div>
+    <div class="phase-body">
+      <div class="initiative">
+        <div class="init-header"><div class="init-title">Establish an AI Registry</div><span class="init-tag tag-gov">Governance</span></div>
+        <div class="init-detail">Create a registry of every AI tool currently in use, by whom, and for what purpose. Establish visibility before establishing rules.</div>
+      </div>
+      <div class="initiative">
+        <div class="init-header"><div class="init-title">Stand Up Governance Committee</div><span class="init-tag tag-gov">Governance</span></div>
+        <div class="init-detail">Cross-functional: legal/compliance, ops, IT, leadership. Reference NAIC principles — Oversight, Operations, Compliance, Culture. Lightweight, not bureaucratic.</div>
+      </div>
+      <div class="initiative">
+        <div class="init-header"><div class="init-title">Process Audit — Baseline Timing</div><span class="init-tag tag-ops">Operations</span></div>
+        <div class="init-detail">Payoff management, HOA estoppel tracking, and closing condition clearance. Time each step. Find the re-keying. Find the wait. Build the baseline.</div>
+      </div>
+      <div class="initiative">
+        <div class="init-header"><div class="init-title">Compliance Gap Analysis</div><span class="init-tag tag-reg">Regulatory</span></div>
+        <div class="init-detail">Map emerging AI requirements against current operations. Flag TRAIGA (TX 2026) and AZ HB 2394 disclosure/impersonation rules. Identify the gaps before they become fines.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num">Phase 02</div>
+      <div class="phase-days" style="background:rgba(245,158,11,0.1);color:var(--warn)">Days 31 – 60</div>
+      <div class="phase-title">Launch a targeted pilot</div>
+      <div class="phase-desc">Pick one high-friction area. Deploy a 60-day pilot. Measure time saved and error reduction. Show the team AI assists — it does not replace.</div>
+    </div>
+    <div class="phase-body">
+      <div class="initiative">
+        <div class="init-header"><div class="init-title">Deploy Payoff Expiry Automation</div><span class="init-tag tag-ops">Operations</span></div>
+        <div class="init-detail">Build countdown clocks. Alert when payoff nears expiry. Integrate with case notebook. Measure time saved on payoff re-ordering.</div>
+      </div>
+      <div class="initiative">
+        <div class="init-header"><div class="init-title">Establish Audit Trail for Document Intake</div><span class="init-tag tag-reg">Regulatory</span></div>
+        <div class="init-detail">Hash-chain every document upload. Log identity verification events. Build TRAIGA readiness into the intake process, not as retrofit.</div>
+      </div>
+      <div class="initiative">
+        <div class="init-header"><div class="init-title">HITL Review Protocol</div><span class="init-tag tag-hitl">Human-in-Loop</span></div>
+        <div class="init-detail">Define when AI surfaces exceptions and when humans override. Document every override. Build trust through transparency.</div>
+      </div>
+      <div class="initiative">
+        <div class="init-header"><div class="init-title">Measure &amp; Report (30-60 Day Mark)</div><span class="init-tag tag-measure">Measurement</span></div>
+        <div class="init-detail">Hours saved. Error reduction. Compliance events caught. Cost of pilot vs. value unlocked. Use this to build case for phase 3.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num">Phase 03</div>
+      <div class="phase-days" style="background:rgba(59,130,246,0.1);color:var(--accent2)">Days 61 – 90</div>
+      <div class="phase-title">Measure, layer, and expand</div>
+      <div class="phase-desc">Use early wins to build momentum. Show measurable ROI. Add governance controls. Propose the next pilot.</div>
+    </div>
+    <div class="phase-body">
+      <div class="initiative">
+        <div class="init-header"><div class="init-title">Governance Hardening</div><span class="init-tag tag-gov">Governance</span></div>
+        <div class="init-detail">Layer 2 admission controls. Policy guidance layer. Expand the audit trail to all AI-assisted decisions. Make it audit-defensible.</div>
+      </div>
+      <div class="initiative">
+        <div class="init-header"><div class="init-title">HOA Estoppel Automation Design</div><span class="init-tag tag-ops">Operations</span></div>
+        <div class="init-detail">Design (but do not yet deploy) AI-assisted estoppel tracking. Map to title commitment conditions. Build on lessons from payoff automation.</div>
+      </div>
+      <div class="initiative">
+        <div class="init-header"><div class="init-title">Compliance Report &amp; Leadership Review</div><span class="init-tag tag-reg">Regulatory</span></div>
+        <div class="init-detail">Formal report to leadership: TRAIGA readiness, AZ HB 2394 safe harbor status, governance committee findings. Road to multi-year scale.</div>
+      </div>
+      <div class="initiative">
+        <div class="init-header"><div class="init-title">Phase 4 Planning &amp; Stakeholder Alignment</div><span class="init-tag tag-hitl">Human-in-Loop</span></div>
+        <div class="init-detail">Propose next pilots. Lock in budget. Set 12-month roadmap. Position EAT Harness as the agency's AI operating system, not a one-off tool.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="pillars">
+  <div class="section-label">Four strategic pillars</div>
+  <div class="pillars-grid">
+    <div class="pillar-card">
+      <div class="pillar-icon" style="background:rgba(0,212,170,0.1);font-size:18px">⚖️</div>
+      <div class="pillar-title">AI Governance Framework</div>
+      <div class="pillar-body">Governance is the product. Not a checklist — a living system that makes AI accountable before it makes decisions, not after.</div>
+      <div class="pillar-points">
+        <div class="pillar-point">AI Registry — visibility of all tools and uses</div>
+        <div class="pillar-point">Governance Committee — cross-functional oversight</div>
+        <div class="pillar-point">Audit Trail — every decision logged and traceable</div>
+      </div>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-icon" style="background:rgba(139,92,246,0.1);font-size:18px">🏛️</div>
+      <div class="pillar-title">Regulatory Alignment</div>
+      <div class="pillar-body">Compliance-by-design means the system is built around the rules — not patched to meet them after the fact.</div>
+      <div class="pillar-points">
+        <div class="pillar-point">TRAIGA (TX 2026) — governance documentation ready</div>
+        <div class="pillar-point">AZ HB 2394 — impersonation &amp; disclosure safe harbor</div>
+        <div class="pillar-point">TRID/RESPA — wire instruction and timing compliance</div>
+      </div>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-icon" style="background:rgba(59,130,246,0.1);font-size:18px">⚡</div>
+      <div class="pillar-title">Operational Efficiency</div>
+      <div class="pillar-body">Scale transaction volume without scaling headcount. AI handles the drudgery. Humans handle the judgment.</div>
+      <div class="pillar-points">
+        <div class="pillar-point">Payoff automation — expiry countdown clocks</div>
+        <div class="pillar-point">Condition tracking — commitment state machine</div>
+        <div class="pillar-point">Exception alerts — surface blockers early, always</div>
+      </div>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-icon" style="background:rgba(16,185,129,0.1);font-size:18px">👤</div>
+      <div class="pillar-title">Human-in-the-Loop Always</div>
+      <div class="pillar-body">AI assists professional judgment. It does not substitute for it. Especially on commitments, closings, and fund releases.</div>
+      <div class="pillar-points">
+        <div class="pillar-point">HITL Review Protocol — when AI surfaces, humans decide</div>
+        <div class="pillar-point">Override logging — every deviation is audited</div>
+        <div class="pillar-point">Professional accountability — licensed escrow officer always in chain</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="questions-section">
+  <div class="section-label" style="color:var(--muted)">Questions that show strategic thinking</div>
+  <div class="questions-grid">
+    <div class="question-card">
+      <div class="q-label">Ops Intelligence</div>
+      <div class="q-text">What are the biggest operational pain points today — manual processes, compliance bottlenecks, closing delays?</div>
+      <div class="q-intent">Shows you need real data before building anything. Signals practitioner, not theorist.</div>
+    </div>
+    <div class="question-card">
+      <div class="q-label">Leadership Alignment</div>
+      <div class="q-text">How does leadership currently view AI adoption — where's the appetite for risk vs. the urgency for reward?</div>
+      <div class="q-intent">Surfaces political landscape. Tells you whether to lead with efficiency or compliance framing.</div>
+    </div>
+    <div class="question-card">
+      <div class="q-label">Compliance Gap</div>
+      <div class="q-text">What existing compliance infrastructure is in place for title and escrow operations — and where are the gaps for AI specifically?</div>
+      <div class="q-intent">Positions you as building on what exists. Shows you won't create duplication or conflict.</div>
+    </div>
+    <div class="question-card">
+      <div class="q-label">Tech Stack</div>
+      <div class="q-text">What's the current tech stack and vendor landscape? Any plans for AZ or TX market expansion?</div>
+      <div class="q-intent">Integration reality check. Expansion signals where your governance architecture becomes more valuable.</div>
+    </div>
+    <div class="question-card">
+      <div class="q-label">Success Definition</div>
+      <div class="q-text">What does success look like for this role at 90 days — and at 12 months?</div>
+      <div class="q-intent">Closes the loop on the roadmap. Shows you think in measurable outcomes, not activities.</div>
+    </div>
+    <div class="question-card">
+      <div class="q-label">Team Readiness</div>
+      <div class="q-text">How is the team currently thinking about AI — early adopters, skeptics, both? What's shaped that?</div>
+      <div class="q-intent">Culture intelligence. Change management is 80% of implementation. This tells you what you're walking into.</div>
+    </div>
+  </div>
+</div>
+
+<div class="compliance-rail">
+  <div class="section-label">Regulatory framework — what governs this work</div>
+  <div class="rail-grid">
+    <div class="rail-item">
+      <div class="rail-title">NAIC AI Principles</div>
+      <div class="rail-body">Oversight, Operations, Compliance, and Culture. The national framework for responsible AI use in insurance and title. Governance committee structure maps directly to these four pillars.</div>
+      <span class="rail-cite">NAIC Principles on AI · 2020 (updated)</span>
+    </div>
+    <div class="rail-item">
+      <div class="rail-title">Texas TRAIGA 2026</div>
+      <div class="rail-body">Requires "governance by design" documentation for AI used in consequential decisions. EAT Harness audit trail and AI registry satisfies this requirement structurally — not as a retrofit.</div>
+      <span class="rail-cite">TX SB 2068 · Effective 2026</span>
+    </div>
+    <div class="rail-item">
+      <div class="rail-title">Arizona HB 2394</div>
+      <div class="rail-body">Anti-impersonation and deepfake disclosure requirements. Governed document intake with identity verification and hash-chained audit trail creates safe harbor against seller impersonation claims.</div>
+      <span class="rail-cite">AZ HB 2394 · Active</span>
+    </div>
+    <div class="rail-item">
+      <div class="rail-title">TRID / RESPA Overlap</div>
+      <div class="rail-body">Closing disclosure timing rules, wire instruction liability, and escrow acknowledgment requirements all create documentation obligations. Governance layer satisfies these as a byproduct of operation.</div>
+      <span class="rail-cite">12 CFR 1026 / 12 CFR 1024</span>
+    </div>
+  </div>
+</div>
+
+<div class="footnote">
+  <div class="fn-text">Research &amp; framework design: G. Phillips · April 2025 · EAT Harness v1.0</div>
+  <div class="fn-badge">Compliance-First · HITL Always · Audit-Defensible</div>
+</div>
+</div>
+
 <!-- ARCHITECTURE TAB -->
-<div class="tab-panel active" id="tab-architecture">
+<div class="tab-panel" id="tab-architecture">
   <div class="arch-view">
     <svg viewBox="0 0 680 660" xmlns="http://www.w3.org/2000/svg">
       <defs>
