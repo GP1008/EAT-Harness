@@ -6,6 +6,14 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+// Prevent stale cache from delivered HTML in this roll-forward cycle
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, max-age=0, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+});
+
 // Serve static files from the current directory
 app.use(express.static(__dirname));
 

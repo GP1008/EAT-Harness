@@ -698,10 +698,23 @@ function updateClock() {
   if (el) el.textContent = new Date().toISOString().replace('T',' ').substring(0,19) + ' UTC';
 }
 
-renderDocs();
-renderLog(logEntries);
-setInterval(updateClock, 1000);
-updateClock();
+document.addEventListener('DOMContentLoaded', () => {
+  const queryTab = new URLSearchParams(window.location.search).get('tab') || 'plan';
+  const initialTab = ['plan', 'architecture', 'simulation'].includes(queryTab) ? queryTab : 'plan';
+  switchTab(initialTab);
+  renderDocs();
+  renderLog(logEntries);
+  setInterval(updateClock, 1000);
+  updateClock();
+});
+
+// Fallback for situations where DOMContentLoaded already fired
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  renderDocs();
+  renderLog(logEntries);
+  updateClock();
+  setInterval(updateClock, 1000);
+}
 
 setInterval(() => {
   const auto = [
