@@ -1,0 +1,28 @@
+{
+  "name": "eat-harness",
+  "version": "1.0.0",
+  "description": "Escrow & Title Governed Architecture — AI governance system for title and escrow operations",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "escrow",
+    "title",
+    "governance",
+    "ai",
+    "compliance",
+    "traiga",
+    "hitl"
+  ],
+  "author": "G. Phillips",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
